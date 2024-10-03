@@ -1,7 +1,7 @@
 # This workflow will notify in telegram chat on push or pull request to master or mai or dev branch
 
 name: Notification
-on:
+on: 
   push:
     branches:
       - master
@@ -19,7 +19,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Telegram Notify
-        uses: Lukasss93/telegram-action@v2
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TG_CHANNEL_TOKEN }}
-          TELEGRAM_CHAT: ${{ secrets.TG_CHANNEL_ID }}
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TG_CHANNEL_ID }}
+          token: ${{ secrets.TG_CHANNEL_TOKEN }}
+          message: |
+            The ${{ github.event_name }} has been done to ${{ github.ref_name }}
+            
+            ${{ github.actor }} created commit:
+            Commit message: ${{ github.event.commits[0].message }}
+            
+            Repository: ${{ github.repository }}
+            
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
