@@ -17,3 +17,8 @@ spring:
     init:
       mode: never
       continue-on-error: false
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /
