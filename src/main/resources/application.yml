@@ -22,3 +22,7 @@ springdoc:
   swagger-ui:
     disable-swagger-default-url: true
     path: /
+
+upload:
+  path: ${UPLOAD_PATH}
+

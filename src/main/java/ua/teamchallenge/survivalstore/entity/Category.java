@@ -17,22 +17,18 @@ import java.util.Set;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String name;
 
     private String image;
 
     @Column(name = "is_top")
-    private boolean isTop;
+    private Boolean isTop;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Category parentCategory;
-
-    @OneToMany(mappedBy = "parentCategory")
-    private Set<Category> subCategories;
 
 }
