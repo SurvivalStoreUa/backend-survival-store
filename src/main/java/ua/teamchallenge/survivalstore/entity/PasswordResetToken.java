@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.Set;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,22 +13,15 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicUpdate
-@Table(name = "category")
-public class Category {
+public class PasswordResetToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, length = 100)
-    private String name;
-
-    private String image;
-
-    @Column(name = "is_top")
-    private Boolean isTop;
-
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private Category parentCategory;
-
+    @Column(unique = true, nullable = false)
+    private String token;
+    private LocalDateTime expirationDate;
+    private static final int EXPIRATION = 20;
+    @OneToOne
+    @JoinColumn(nullable = false, name = "user_id")
+    private User user;
 }
