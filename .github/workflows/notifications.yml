@@ -1,0 +1,34 @@
+# This workflow will notify in telegram chat on push or pull request to master or mai or dev branch
+
+name: Notification
+on: 
+  push:
+    branches:
+      - master
+      - main
+      - dev
+  pull_request:
+    branches:
+      - master
+      - main
+      - dev
+jobs:
+
+  build:
+    name: Notification on push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Telegram Notify
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TG_CHANNEL_ID }}
+          token: ${{ secrets.TG_CHANNEL_TOKEN }}
+          message: |
+            The ${{ github.event_name }} has been done to ${{ github.ref_name }}
+            
+            ${{ github.actor }} created commit:
+            Commit message: ${{ github.event.commits[0].message }}
+            
+            Repository: ${{ github.repository }}
+            
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
