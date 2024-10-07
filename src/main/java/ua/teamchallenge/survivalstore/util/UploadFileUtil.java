@@ -18,9 +18,9 @@ public class UploadFileUtil {
     private String uploadPath;
     private final Logger logger = LogManager.getLogger(UploadFileUtil.class);
 
-    public String saveFile(MultipartFile multipartFile){
+    public String saveFile(MultipartFile multipartFile) {
         logger.info("saveFile() - Saving file {}", multipartFile.getOriginalFilename());
-        createDirectoryIfNotExist();;
+        createDirectoryIfNotExist();
         String uniqueName = null;
         try {
             uniqueName = saveFileToDirectory(multipartFile);
@@ -30,16 +30,18 @@ public class UploadFileUtil {
         logger.info("saveFile() - File has been saved");
         return uniqueName;
     }
-    private void createDirectoryIfNotExist(){
+
+    private void createDirectoryIfNotExist() {
         File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()){
+        if (!uploadDir.exists()) {
             uploadDir.mkdir();
         }
     }
+
     private String saveFileToDirectory(MultipartFile multipartFile) throws IOException {
         String uuidFile = UUID.randomUUID().toString();
-        String uniqueName = uuidFile+"_"+multipartFile.getOriginalFilename();
-        Path path = Paths.get(uploadPath+"/"+uniqueName);
+        String uniqueName = uuidFile + "_" + multipartFile.getOriginalFilename();
+        Path path = Paths.get(uploadPath + "/" + uniqueName);
         multipartFile.transferTo(new File(path.toUri()));
         return uniqueName;
     }

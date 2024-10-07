@@ -16,20 +16,22 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ValidationExceptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<?> handleMethodArgumentNotValidException (MethodArgumentNotValidException ex) {
+    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = ex.getBindingResult().getAllErrors()
                 .stream()
                 .collect(Collectors.toMap(error -> ((FieldError) error).getField(), error -> error.getDefaultMessage()));
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler({HandlerMethodValidationException.class})
-    public ResponseEntity<?> handleHandlerMethodValidationException (HandlerMethodValidationException ex) {
+    public ResponseEntity<?> handleHandlerMethodValidationException(HandlerMethodValidationException ex) {
         Map<String, String> errors = new HashMap<>();
-        ex.getAllErrors().forEach((error) ->
+        ex.getAllErrors().forEach(error ->
                 putErrorInMap(errors, (DefaultMessageSourceResolvable) error));
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
-    private void putErrorInMap(Map<String, String> errors, DefaultMessageSourceResolvable error){
+
+    private void putErrorInMap(Map<String, String> errors, DefaultMessageSourceResolvable error) {
         Object[] c = error.getArguments();
         DefaultMessageSourceResolvable d = (DefaultMessageSourceResolvable) c[0];
         String field = d.getDefaultMessage();
