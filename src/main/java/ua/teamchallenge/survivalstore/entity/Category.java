@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @Entity
@@ -30,5 +28,5 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Category parentCategory;
-
 }
+
