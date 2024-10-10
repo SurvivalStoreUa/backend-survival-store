@@ -11,15 +11,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import ua.teamchallenge.survivalstore.dto.category.CategoryRequest;
+import ua.teamchallenge.survivalstore.dto.category.CategoryResponse;
 import ua.teamchallenge.survivalstore.service.CategoryService;
 import ua.teamchallenge.survivalstore.validation.general.image.ImageExtensionValid;
+
+import java.util.List;
 
 @Tag(name = "Category")
 @RestController
@@ -27,15 +29,25 @@ import ua.teamchallenge.survivalstore.validation.general.image.ImageExtensionVal
 public class CategoryController {
 
     private final CategoryService categoryService;
-    @Operation(summary = "Create category",description = "Creating category")
+
+    @Operation(summary = "Create category", description = "Creating category")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json",schema = @Schema())}),
-            @ApiResponse(responseCode = "400", description = "Failed validation",content = {@Content(mediaType = "application/json",schema = @Schema(example = "{\n" + "  \"name\": \"Field must not be empty\"\n" + "}"))})
+            @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema())}),
+            @ApiResponse(responseCode = "400", description = "Failed validation", content = {@Content(mediaType = "application/json", schema = @Schema(example = "{\n\"name\": \"Field must not be empty\"\n}"))})
     })
-    @PostMapping(path = "/admin/category/new", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE} )
+    @PostMapping(path = "/admin/category/new", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     ResponseEntity<?> createCategory(@Valid @RequestPart CategoryRequest categoryRequest,
-                                     @RequestPart(name = "image", required = false) @ImageExtensionValid MultipartFile image){
+                                     @RequestPart(name = "image", required = false) @ImageExtensionValid MultipartFile image) {
         categoryService.createCategory(categoryRequest, image);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get main categories", description = "Retrieves a list of main categories without parent category")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CategoryResponse.class))})
+    })
+    @GetMapping(path = "/admin/category/main")
+    public List<CategoryResponse> getMainCategories() {
+        return categoryService.getMainCategories();
     }
 }
