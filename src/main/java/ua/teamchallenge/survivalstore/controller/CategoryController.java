@@ -33,9 +33,9 @@ public class CategoryController {
     @Operation(summary = "Create category", description = "Creating category")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema())}),
-            @ApiResponse(responseCode = "400", description = "Failed validation", content = {@Content(mediaType = "application/json", schema = @Schema(example = "{\n\"name\": \"Field must not be empty\"\n}"))})
+            @ApiResponse(responseCode = "400", description = "Failed validation", content = {@Content(mediaType = "application/json", schema = @Schema(example = "{\n\"field\": \"Validation error message\"\n}"))})
     })
-    @PostMapping(path = "/admin/category/new", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(path = "/admin/categories", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     ResponseEntity<?> createCategory(@Valid @RequestPart CategoryRequest categoryRequest,
                                      @RequestPart(name = "image", required = false) @ImageExtensionValid MultipartFile image) {
         categoryService.createCategory(categoryRequest, image);
