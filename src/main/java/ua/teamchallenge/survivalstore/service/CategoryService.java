@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface CategoryService {
     void createCategory(CategoryRequest categoryRequest, MultipartFile image);
+    void updateCategory(Long id, CategoryRequest categoryRequest, MultipartFile image);
     List<CategoryResponse> getMainCategories();
 }

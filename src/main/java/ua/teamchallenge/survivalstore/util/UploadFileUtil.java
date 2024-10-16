@@ -46,4 +46,13 @@ public class UploadFileUtil {
         return uniqueName;
     }
 
+    public boolean deleteFile(String fileName){
+        logger.info("deleteFile() - Deleting file {}", fileName);
+        if(fileName != null) {
+            File file = new File(uploadPath + "/" + fileName);
+            return file.delete();
+        }
+        logger.info("deleteFile() - File is null");
+        return true;
+    }
 }

@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ua.teamchallenge.survivalstore.dto.category.CategoryRequest;
 import ua.teamchallenge.survivalstore.dto.category.CategoryResponse;
@@ -39,6 +36,19 @@ public class CategoryController {
     ResponseEntity<?> createCategory(@Valid @RequestPart CategoryRequest categoryRequest,
                                      @RequestPart(name = "image", required = false) @ImageExtensionValid MultipartFile image) {
         categoryService.createCategory(categoryRequest, image);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "Update category", description = "Updating category")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema())}),
+            @ApiResponse(responseCode = "400", description = "Failed validation", content = {@Content(mediaType = "application/json", schema = @Schema(example = "{\n\"field\": \"Validation error message\"\n}"))})
+    })
+    @PostMapping(path = "/admin/categories/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    ResponseEntity<?> updateCategory(@PathVariable Long id, @Valid @RequestPart CategoryRequest categoryRequest,
+                                     @RequestPart(name = "image", required = false) @ImageExtensionValid MultipartFile image) {
+        categoryService.updateCategory(id, categoryRequest, image);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
