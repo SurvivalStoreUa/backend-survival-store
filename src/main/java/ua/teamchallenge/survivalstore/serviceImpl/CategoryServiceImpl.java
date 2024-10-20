@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.teamchallenge.survivalstore.dto.category.CategoryRequest;
 import ua.teamchallenge.survivalstore.dto.category.CategoryResponse;
+import ua.teamchallenge.survivalstore.dto.category.UpdateCategoryResponse;
 import ua.teamchallenge.survivalstore.entity.Category;
 import ua.teamchallenge.survivalstore.mapper.CategoryMapper;
 import ua.teamchallenge.survivalstore.repository.CategoryRepository;
@@ -37,7 +38,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void updateCategory(Long id, CategoryRequest categoryRequest, MultipartFile image) {
         logger.info("updateCategory() - Updating category: {}", categoryRequest.toString());
-        Category category = categoryRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(String.format("Category has not been found by id: %s ", id)));
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException(String.format("Category has not been found by id: %s ", id)));
         if(category.getParentCategory() != null)
             throw new EntityNotFoundException(String.format("Category has not been found by id: %s ", id));
 
@@ -60,6 +62,19 @@ public class CategoryServiceImpl implements CategoryService {
         }
         logger.info("updateImage() - Image has not been updated");
         return null;
+    }
+
+    @Override
+    public UpdateCategoryResponse getCategory(Long id) {
+        logger.info("getCategory() - Getting category by id: {}", id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException(String.format("Category has not been found by id: %s ", id)));
+        if(category.getParentCategory() != null)
+            throw new EntityNotFoundException(String.format("Category has not been found by id: %s ", id));
+
+        UpdateCategoryResponse updateCategoryResponse = categoryMapper.categoryToUpdateCategoryResponse(category);
+        logger.info("getCategory() - Got category");
+        return updateCategoryResponse;
     }
 
     @Override
