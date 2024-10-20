@@ -43,6 +43,7 @@ public class CategoryController {
     @Operation(summary = "Update category", description = "Updating category")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema())}),
+            @ApiResponse(responseCode = "404", description = "Category not found", content = {@Content(mediaType = "application/json", schema = @Schema(example = "{\n\"message\": \"Category has not been found by id: X\"\n}"))}),
             @ApiResponse(responseCode = "400", description = "Failed validation", content = {@Content(mediaType = "application/json", schema = @Schema(example = "{\n\"field\": \"Validation error message\"\n}"))})
     })
     @PostMapping(path = "/admin/categories/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -52,6 +53,15 @@ public class CategoryController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "Get category", description = "Getting category for update")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema())}),
+            @ApiResponse(responseCode = "404", description = "Category not found", content = {@Content(mediaType = "application/json", schema = @Schema(example = "{\n\"message\": \"Category has not been found by id: X\"\n}"))})
+    })
+    @GetMapping(path = "/admin/categories/{id}")
+    ResponseEntity<?> getCategory(@PathVariable Long id) {
+        return new ResponseEntity<>(categoryService.getCategory(id), HttpStatus.OK);
+    }
     @Operation(summary = "Get main categories", description = "Retrieves a list of main categories without parent category")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CategoryResponse.class))})
